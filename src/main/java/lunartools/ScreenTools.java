@@ -30,6 +30,10 @@ public class ScreenTools {
 		}
 	}
 	
+	public static boolean isInBounds(Rectangle bounds, int x, int y) {
+		return x>=bounds.x && x<bounds.x+bounds.width && y>=bounds.y && y<bounds.y+bounds.height;
+	}
+	
 	private Rectangle getBoundsOfCurrentScreen(Rectangle rectangleFrame) {
 		int centerFrameX=rectangleFrame.x+(rectangleFrame.width>>1);
 		int centerFrameY=rectangleFrame.y+(rectangleFrame.height>>1);
