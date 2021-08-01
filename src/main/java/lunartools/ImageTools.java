@@ -3,7 +3,7 @@ package lunartools;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferByte;
 import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.IOException;
@@ -25,10 +25,10 @@ public class ImageTools {
 	private static Logger logger = LoggerFactory.getLogger(ImageTools.class);
 
 	/**
-	 * Returns an image resource as ImageIcon.
+	 * Returns an image resource as <code>ImageIcon</code>.
 	 * 
 	 * @param iconpath
-	 * @return
+	 * @return ImageIcon
 	 */
 	public static ImageIcon createImageIcon(String iconpath) {
 		URL url = ImageTools.class.getResource(iconpath);
@@ -41,18 +41,30 @@ public class ImageTools {
 	}
 
 	/**
-	 * Returns an image resource as Image
+	 * Returns an image resource as <code>Image</code>
 	 * 
 	 * @param resourcePath
 	 * @param context
-	 * @return
+	 * @return Image
 	 * @throws IOException
 	 */
-	public static Image createImage(String resourcePath) throws IOException {
+	public static Image createImageFromResource(String resourcePath) throws IOException {
 		InputStream inputStream = ImageTools.class.getResourceAsStream(resourcePath);
+		if(inputStream==null) {
+			return null;
+		}
 		byte[] imagedata=FileTools.readBytearrayFromInputStream(inputStream);
 		Image image=Toolkit.getDefaultToolkit().createImage(imagedata);
 		return image;
+	}
+	
+	private static BufferedImage createBufferedImage_intRGB(BufferedImage bufferedImage) {
+		if(bufferedImage.getType()==BufferedImage.TYPE_INT_RGB) {
+			return bufferedImage;
+		}
+		BufferedImage bufferedImageInt=new BufferedImage(bufferedImage.getWidth(),bufferedImage.getHeight(),BufferedImage.TYPE_INT_RGB);
+		bufferedImageInt.getGraphics().drawImage(bufferedImage,0,0,null);
+		return bufferedImageInt;
 	}
 
 	/**
@@ -62,28 +74,12 @@ public class ImageTools {
 	 * @return BufferedImage in <code>TYPE_INT_RGB</code> format
 	 * @throws IOException
 	 */
-	public static BufferedImage getBufferedImage_intRGB(File file) throws IOException {
-		BufferedImage imageByte=ImageIO.read(file);
-		BufferedImage imageInt=getBufferedImage_intRGB(imageByte);
-		imageByte.flush();
-		return imageInt;
-	}
-
-	/**
-	 * Returns a BufferedImage in <code>TYPE_INT_RGB</code> format from the given BufferedImage.
-	 * <br>If the given BufferedImage is already in <code>TYPE_INT_RGB</code> format, it will be returned.
-	 * <br>Otherwise, a new BufferedImage is created and returned.
-	 * 
-	 * @param bufferedImage Either the given BufferedImage if already in <code>TYPE_INT_RGB</code> format, or a new BufferedImage containing the same image.
-	 * @return
-	 */
-	public static BufferedImage getBufferedImage_intRGB(BufferedImage bufferedImage){
+	public static BufferedImage createBufferedImage_intRGB(File file) throws IOException {
+		BufferedImage bufferedImage=ImageIO.read(file);
 		if(bufferedImage.getType()==BufferedImage.TYPE_INT_RGB) {
 			return bufferedImage;
 		}
-		BufferedImage bufferedImageInt=new BufferedImage(bufferedImage.getWidth(),bufferedImage.getHeight(),BufferedImage.TYPE_INT_RGB);
-		bufferedImageInt.getGraphics().drawImage(bufferedImage,0,0,null);
-		return bufferedImageInt;
+		return createBufferedImage_intRGB(bufferedImage);
 	}
 
 	/**
@@ -97,21 +93,22 @@ public class ImageTools {
 	 * @return
 	 */
 	public static int[] getRgbIntsFromBufferedImage(BufferedImage bufferedImage) {
-		DataBuffer databuffer=bufferedImage.getRaster().getDataBuffer();
-		if(databuffer instanceof DataBufferInt) {
-			int[] intImagedata=((DataBufferInt)databuffer).getData();
-			for(int i=0;i<intImagedata.length;i++) {
-				intImagedata[i]=intImagedata[i]&0xffffff;
-			}
-			return intImagedata;
-			//		}else if(databuffer instanceof DataBufferByte) {
-			////			byte[] byteImagedata=((DataBufferByte)databuffer).getData().clone();
-			////			int[] intImagedata=convertByteBGRtoIntRGB(byteImagedata);
-			////			return intImagedata;
-			//			return getRgbIntsFromBufferedImage(getBufferedImage_intRGB(bufferedImage));
-		}else {
-			throw new RuntimeException("databuffer not supported: "+databuffer.getClass().getName());
+		int[] intImagedata=null;
+		switch(bufferedImage.getType()) {
+		case BufferedImage.TYPE_INT_ARGB:
+		case BufferedImage.TYPE_INT_RGB:
+			intImagedata=((DataBufferInt)bufferedImage.getRaster().getDataBuffer()).getData();
+			applyMascToPixeldata(intImagedata,0xffffff);
+			break;
+		case BufferedImage.TYPE_3BYTE_BGR:
+			byte[] byteImagedata=((DataBufferByte)bufferedImage.getRaster().getDataBuffer()).getData();
+			intImagedata=createIntRGBfromByteBGR(byteImagedata);
+			break;
+		default:
+			bufferedImage=createBufferedImage_intRGB(bufferedImage);
+			intImagedata=((DataBufferInt)bufferedImage.getRaster().getDataBuffer()).getData();
 		}
+		return intImagedata;
 	}
 
 	/**
@@ -123,18 +120,16 @@ public class ImageTools {
 	 * @return
 	 */
 	public static byte[] getRgbBytesFromBufferedImage(BufferedImage bufferedImage) {
-		DataBuffer databuffer=bufferedImage.getRaster().getDataBuffer();
-		if(databuffer instanceof DataBufferInt) {
-			int[] intImagedata=((DataBufferInt)databuffer).getData();
+		if(bufferedImage.getType()==BufferedImage.TYPE_INT_RGB || bufferedImage.getType()==BufferedImage.TYPE_INT_ARGB){
+			int[] intImagedata=((DataBufferInt)bufferedImage.getRaster().getDataBuffer()).getData();
 			byte[] byteImagedata=createByteRGBfromIntRGB(intImagedata);
 			return byteImagedata;
-			//		}else if(databuffer instanceof DataBufferByte) {
-			////			byte[] byteImagedata=((DataBufferByte)databuffer).getData().clone();
-			////			byteRGBswapRB(byteImagedata);
-			////			return byteImagedata;
-			//			return getRgbBytesFromBufferedImage(getBufferedImage_intRGB(bufferedImage));
+		}else if(bufferedImage.getType()==BufferedImage.TYPE_3BYTE_BGR) {
+			byte[] byteImagedata=((DataBufferByte)bufferedImage.getRaster().getDataBuffer()).getData().clone();
+			byteRGBswapRB(byteImagedata);
+			return byteImagedata;
 		}else {
-			throw new RuntimeException("databuffer not supported: "+databuffer.getClass().getName());
+			throw new RuntimeException("image type not supported: "+bufferedImage.getType());
 		}
 	}
 
@@ -147,9 +142,10 @@ public class ImageTools {
 	 * @param bufferedImage
 	 */
 	public static void writeRgbIntsToBufferedImage(int[] intsRGB, BufferedImage bufferedImage) {
-		DataBuffer databuffer=bufferedImage.getRaster().getDataBuffer();
-		if(databuffer instanceof DataBufferInt) {
-			int[] intImagedata=((DataBufferInt)databuffer).getData();
+		switch(bufferedImage.getType()) {
+		case BufferedImage.TYPE_INT_ARGB:
+		case BufferedImage.TYPE_INT_RGB:
+			int[] intImagedata=((DataBufferInt)bufferedImage.getRaster().getDataBuffer()).getData();
 			if(intImagedata.length!=intsRGB.length) {
 				throw new RuntimeException("pixel array size mismatch");
 			}
@@ -157,14 +153,21 @@ public class ImageTools {
 				return;
 			}
 			System.arraycopy(intsRGB, 0, intImagedata, 0, intsRGB.length);
-			//		}else if(databuffer instanceof DataBufferByte) {
-			//			//TO-DO: check if this DataBufferByte array is really in BGR format
-			//			byte[] byteImagedata=((DataBufferByte)databuffer).getData();
-			//			byte[] bytePixelData=convertIntRGBtoByteBGR(pixeldata);
-			//			System.arraycopy(bytePixelData, 0, byteImagedata, 0, bytePixelData.length);
-			//			throw new RuntimeException("DataBufferByte");
-		}else {
-			throw new RuntimeException("databuffer not supported: "+databuffer.getClass().getName());
+			return;
+		case BufferedImage.TYPE_3BYTE_BGR:
+			byte[] byteImagedata=((DataBufferByte)bufferedImage.getRaster().getDataBuffer()).getData();
+			if(byteImagedata.length!=intsRGB.length*3) {
+				throw new RuntimeException("image data size mismatch: "+byteImagedata.length+" / "+intsRGB.length*3);
+			}
+			for(int i=0,index=0;i<intsRGB.length;i++) {
+				int pixel=intsRGB[i];
+				byteImagedata[index++]=(byte)pixel;//B
+				byteImagedata[index++]=(byte)(pixel>>8);//G
+				byteImagedata[index++]=(byte)(pixel>>16);//R
+			}
+			return;
+		default:
+			throw new RuntimeException("image type not supported: "+bufferedImage.getType());
 		}
 	}
 
@@ -199,23 +202,6 @@ public class ImageTools {
 			bytes[index++]=(byte)(pixel>>16);//R
 			bytes[index++]=(byte)(pixel>>8);//G
 			bytes[index++]=(byte)pixel;//B
-		}
-		return bytes;
-	}
-
-	/**
-	 * Creates an byte array in BGR format from a given int array in RGB format.
-	 * 
-	 * @param intsRGB The int array in RGB format
-	 * @return A new created byte array in BGR format
-	 */
-	public static byte[] createByteBGRfromIntRGB(int[] intsRGB) {
-		byte[] bytes=new byte[intsRGB.length*3];
-		for(int i=0,index=0;i<intsRGB.length;i++) {
-			int pixel=intsRGB[i];
-			bytes[index++]=(byte)pixel;//B
-			bytes[index++]=(byte)(pixel>>8);//G
-			bytes[index++]=(byte)(pixel>>16);//R
 		}
 		return bytes;
 	}
