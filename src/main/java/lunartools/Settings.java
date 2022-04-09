@@ -115,7 +115,11 @@ public class Settings {
 			return;
 		}
 		try(FileWriter fileWriter=new FileWriter(fileProperties)) {
-			properties.store(fileWriter,programName+version==null?"":(" "+version));
+			String comments="";
+			if(programName!=null) {
+				comments=programName+(version==null?"":(" "+version));
+			}
+			properties.store(fileWriter,comments);
 		}
 	}
 	

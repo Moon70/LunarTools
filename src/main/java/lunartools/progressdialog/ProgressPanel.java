@@ -24,7 +24,7 @@ public class ProgressPanel extends JPanel {
 
 		int y=10;
 		int xLabel1=border;
-		int lineHight=18;
+		int lineHeight=18;
 		int lineDistance=20;
 		int hButton=26;
 		int wButton=84;
@@ -33,20 +33,20 @@ public class ProgressPanel extends JPanel {
 			y+=(lineDistance>>1);
 		}
 		label1=new JLabel(infoLine1);
-		label1.setBounds(xLabel1,y,width-xLabel1-border,lineHight);
+		label1.setBounds(xLabel1,y,width-xLabel1-border,lineHeight);
 		add(label1);
 
 		if(infoLine2!=null) {
 			y+=lineDistance;
 			label2=new JLabel(infoLine2);
-			label2.setBounds(xLabel1,y,width-xLabel1-border,lineHight);
+			label2.setBounds(xLabel1,y,width-xLabel1-border,lineHeight);
 			add(label2);
 		}
 
 		y+=lineDistance;
 
 		progressBar1 = new JProgressBar(0, 100);
-		progressBar1.setBounds(xLabel1, y, width-border-border, lineHight);
+		progressBar1.setBounds(xLabel1, y, width-border-border, lineHeight);
 		progressBar1.setValue(0);
 		progressBar1.setStringPainted(true);
 		add(progressBar1, BorderLayout.CENTER);
