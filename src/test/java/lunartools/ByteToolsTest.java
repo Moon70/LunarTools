@@ -237,6 +237,46 @@ class ByteToolsTest {
 	}
 
 	@Test
+	void positiveWordIsWrittenToBigEndianBytearrayCorrectly() {
+		byte[] bytearray=new byte[]	{0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08};
+		byte[] expected=new byte[]	{0x01,0x02,0x11,0x12,0x05,0x06,0x07,0x08};
+		int word=0x1112;
+		int offsetToWriteWord=2;
+		ByteTools.bWriteWordToBytearray(bytearray,offsetToWriteWord,word);
+		assertArrayEquals(expected,bytearray);
+	}
+
+	@Test
+	void positiveWordIsWrittenToLittleEndianBytearrayCorrectly() {
+		byte[] bytearray=new byte[]	{0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08};
+		byte[] expected=new byte[]	{0x01,0x02,0x12,0x11,0x05,0x06,0x07,0x08};
+		int word=0x1112;
+		int offsetToWriteWord=2;
+		ByteTools.lWriteWordToBytearray(bytearray,offsetToWriteWord,word);
+		assertArrayEquals(expected,bytearray);
+	}
+
+	@Test
+	void negativeWordIsWrittenToBigEndianBytearrayCorrectly() {
+		byte[] bytearray=new byte[]	{0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08};
+		byte[] expected=new byte[]	{0x01,0x02,(byte)0xff,(byte)0xfe,0x05,0x06,0x07,0x08};
+		int word=0xfffe;
+		int offsetToWriteWord=2;
+		ByteTools.bWriteWordToBytearray(bytearray,offsetToWriteWord,word);
+		assertArrayEquals(expected,bytearray);
+	}
+
+	@Test
+	void negativeWordIsWrittenToLittleEndianBytearrayCorrectly() {
+		byte[] bytearray=new byte[]	{0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08};
+		byte[] expected=new byte[]	{0x01,0x02,(byte)0xfe,(byte)0xff,0x05,0x06,0x07,0x08};
+		int word=0xfffe;
+		int offsetToWriteWord=2;
+		ByteTools.lWriteWordToBytearray(bytearray,offsetToWriteWord,word);
+		assertArrayEquals(expected,bytearray);
+	}
+
+	@Test
 	void positiveLongwordIsWrittenToBigEndianBytearrayCorrectly() {
 		byte[] bytearray=new byte[]	{0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08};
 		byte[] expected=new byte[]	{0x01,0x02,0x11,0x12,0x13,0x14,0x07,0x08};

@@ -215,6 +215,20 @@ public class ByteTools {
 	}
 
 	/**
+	 * Writes a word to a bytearray at the given offset, overwriting the bytes.
+	 * <br>The byte order is big endian.
+	 * 
+	 * @param bytes The bytearray to write the word
+	 * @param offset offset to the bytearray position to write the word
+	 * @param word The word
+	 */
+	public static void bWriteWordToBytearray(byte[] bytes,int offset,int word) {
+		byte[] ba=bWordToBytearray(word);
+		bytes[offset]=ba[0];
+		bytes[offset+1]=ba[1];
+	}
+
+	/**
 	 * Writes a longword to a bytearray at the given offset, overwriting the bytes.
 	 * <br>The byte order is big endian.
 	 * 
@@ -227,6 +241,20 @@ public class ByteTools {
 		for(int i=0;i<4;i++) {
 			bytes[offset+i]=ba[i];
 		}
+	}
+
+	/**
+	 * Writes a word to a bytearray at the given offset, overwriting the bytes.
+	 * <br>The byte order is little endian.
+	 * 
+	 * @param bytes The bytearray to write the word
+	 * @param offset offset to the bytearray position to write the word
+	 * @param word The word
+	 */
+	public static void lWriteWordToBytearray(byte[] bytes,int offset,int word) {
+		byte[] ba=lWordToBytearray(word);
+		bytes[offset]=ba[0];
+		bytes[offset+1]=ba[1];
 	}
 
 	/**
