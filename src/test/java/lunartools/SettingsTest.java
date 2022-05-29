@@ -72,6 +72,14 @@ class SettingsTest {
 	}
 
 	@Test
+	void whenStringNeitherExistsInPropertiesNorDefaultPropertiesThenExceptionIsThrown() {
+		final String propertyName="stringDoesNotExist";
+		final String expectedMessage="Property not found: "+propertyName;
+		Exception exception=assertThrows(RuntimeException.class, () -> settings.getStringNotNull(propertyName));
+		assertEquals(expectedMessage,exception.getMessage());
+	}
+
+	@Test
 	void whenStringNeitherExistsInPropertiesNorDefaultPropertiesThenGivenDefaultStringIsReturned() {
 		final String stringExpected="stringDefaultParameter";
 		final String stringDefault="stringDefaultParameter";

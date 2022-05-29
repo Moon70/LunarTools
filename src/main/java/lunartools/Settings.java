@@ -1,3 +1,4 @@
+
 package lunartools;
 
 import java.awt.Dimension;
@@ -162,6 +163,22 @@ public class Settings {
 	 */
 	public String getString(String name) {
 		return properties.getProperty(name);
+	}
+
+	/**
+	 * This method searches both the property file and default property file for the given key and returns its String value.
+	 * <br>If no property is found, a RuntimeException is thrown.
+	 * 
+	 * @param name Property name
+	 * @throws RuntimeException Property not found
+	 * @return property value
+	 */
+	public String getStringNotNull(String name) {
+		String s=properties.getProperty(name);
+		if(s==null) {
+			throw new RuntimeException("Property not found: "+name);
+		}
+		return s;
 	}
 
 	/**
