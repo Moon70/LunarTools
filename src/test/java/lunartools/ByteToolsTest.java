@@ -10,84 +10,84 @@ class ByteToolsTest {
 	void positiveIntLongwordIsConvertedToBigEndianBytearrayCorrectly() {
 		byte[] expected=new byte[] {0x01,0x02,(byte)0x80,(byte)0x90};
 		int longword=0x01028090;
-		assertArrayEquals(expected,ByteTools.bLongwordToBytearray(longword));
+		assertArrayEquals(expected,ByteTools.longwordToByteArrayBigEndian(longword));
 	}
 
 	@Test
 	void positiveIntLongwordIsConvertedToLittleEndianBytearrayCorrectly() {
 		byte[] expected=new byte[] {(byte)0x90,(byte)0x80,0x02,0x01};
 		int longword=0x01028090;
-		assertArrayEquals(expected,ByteTools.lLongwordToBytearray(longword));
+		assertArrayEquals(expected,ByteTools.longwordToByteArrayLittleEndian(longword));
 	}
 
 	@Test
 	void negativeIntLongwordIsConvertedToBigEndianBytearrayCorrectly() {
 		byte[] expected=new byte[] {(byte)0xff,(byte)0xfc,(byte)0xfb,(byte)0xfa};
 		int longword=0xfffcfbfa;
-		assertArrayEquals(expected,ByteTools.bLongwordToBytearray(longword));
+		assertArrayEquals(expected,ByteTools.longwordToByteArrayBigEndian(longword));
 	}
 
 	@Test
 	void negativeIntLongwordIsConvertedToLittleEndianBytearrayCorrectly() {
 		byte[] expected=new byte[] {(byte)0xfa,(byte)0xfb,(byte)0xfc,(byte)0xff};
 		int longword=0xfffcfbfa;
-		assertArrayEquals(expected,ByteTools.lLongwordToBytearray(longword));
+		assertArrayEquals(expected,ByteTools.longwordToByteArrayLittleEndian(longword));
 	}
 
 	@Test
 	void positiveLongLongwordIsConvertedToBigEndianBytearrayCorrectly() {
 		byte[] expected=new byte[] {0x01,0x02,(byte)0x80,(byte)0x90};
 		long longword=0x01028090;
-		assertArrayEquals(expected,ByteTools.bLongwordToBytearray(longword));
+		assertArrayEquals(expected,ByteTools.longwordToByteArrayBigEndian(longword));
 	}
 
 	@Test
 	void positiveLongLongwordIsConvertedToLittleEndianBytearrayCorrectly() {
 		byte[] expected=new byte[] {(byte)0x90,(byte)0x80,0x02,0x01};
 		long longword=0x01028090;
-		assertArrayEquals(expected,ByteTools.lLongwordToBytearray(longword));
+		assertArrayEquals(expected,ByteTools.longwordToByteArrayLittleEndian(longword));
 	}
 
 	@Test
 	void negativeLongLongwordIsConvertedToBigEndianBytearrayCorrectly() {
 		byte[] expected=new byte[] {(byte)0xff,(byte)0xff,(byte)0xff,(byte)0xff};
 		long longword=0xffffffff;
-		assertArrayEquals(expected,ByteTools.bLongwordToBytearray(longword));
+		assertArrayEquals(expected,ByteTools.longwordToByteArrayBigEndian(longword));
 	}
 
 	@Test
 	void negativeLongLongwordIsConvertedToLittleEndianBytearrayCorrectly() {
 		byte[] expected=new byte[] {(byte)0xfa,(byte)0xfb,(byte)0xfc,(byte)0xff};
 		int longword=0xfffcfbfa;
-		assertArrayEquals(expected,ByteTools.lLongwordToBytearray(longword));
+		assertArrayEquals(expected,ByteTools.longwordToByteArrayLittleEndian(longword));
 	}
 
 	@Test
 	void positiveIntWordIsConvertedToBigEndianBytearrayCorrectly() {
 		byte[] expected=new byte[] {0x02,(byte)0x80};
 		int word=0x0280;
-		assertArrayEquals(expected,ByteTools.bWordToBytearray(word));
+		assertArrayEquals(expected,ByteTools.wordToBytearrayBigEndian(word));
 	}
 
 	@Test
 	void positiveIntWordIsConvertedToLittleEndianBytearrayCorrectly() {
 		byte[] expected=new byte[] {(byte)0x80,0x02};
 		int word=0x0280;
-		assertArrayEquals(expected,ByteTools.lWordToBytearray(word));
+		assertArrayEquals(expected,ByteTools.wordToBytearrayLittleEndian(word));
 	}
 
 	@Test
 	void negativeIntWordIsConvertedToBigEndianBytearrayCorrectly() {
 		byte[] expected=new byte[] {(byte)0xff,(byte)0xff};
 		int word=0xffff;
-		assertArrayEquals(expected,ByteTools.bWordToBytearray(word));
+		assertArrayEquals(expected,ByteTools.wordToBytearrayBigEndian(word));
 	}
 
 	@Test
 	void negativeIntWordIsConvertedToLittleEndianBytearrayCorrectly() {
 		byte[] expected=new byte[] {(byte)0xfa,(byte)0xff};
 		int word=0xfffa;
-		assertArrayEquals(expected,ByteTools.lWordToBytearray(word));
+		assertArrayEquals(expected,ByteTools.wordToBytearrayLittleEndian(word));
 	}
 
 	@Test
@@ -95,7 +95,7 @@ class ByteToolsTest {
 		long expected=0x01028090;
 		byte[] ba=new byte[] {0x11,0x11,0x01,0x02,(byte)0x80,(byte)0x90,0x11,0x11};
 		int offsetToWantedBytearray=2;
-		assertEquals(expected,ByteTools.bBytearrayToLongword(ba,offsetToWantedBytearray));
+		assertEquals(expected,ByteTools.bigEndianBytesToLongWord(ba,offsetToWantedBytearray));
 	}
 
 	@Test
@@ -103,7 +103,7 @@ class ByteToolsTest {
 		long expected=0x01028090;
 		byte[] ba=new byte[] {0x11,0x11,0x01,0x02,(byte)0x80,(byte)0x90,0x11,0x11};
 		int offsetToWantedBytearray=2;
-		assertEquals(expected,ByteTools.bBytearrayToSignedLongword(ba,offsetToWantedBytearray));
+		assertEquals(expected,ByteTools.bigEndianBytesToSignedLongWord(ba,offsetToWantedBytearray));
 	}
 
 	@Test
@@ -111,7 +111,7 @@ class ByteToolsTest {
 		long expected=0x01028090;
 		byte[] ba=new byte[] {0x11,0x11,(byte)0x90,(byte)0x80,0x02,0x01,0x11,0x11};
 		int offsetToWantedBytearray=2;
-		assertEquals(expected,ByteTools.lBytearrayToLongword(ba,offsetToWantedBytearray));
+		assertEquals(expected,ByteTools.littleEndianBytesToLongWord(ba,offsetToWantedBytearray));
 	}
 
 	@Test
@@ -119,7 +119,7 @@ class ByteToolsTest {
 		long expected=0x01028090;
 		byte[] ba=new byte[] {0x11,0x11,(byte)0x90,(byte)0x80,0x02,0x01,0x11,0x11};
 		int offsetToWantedBytearray=2;
-		assertEquals(expected,ByteTools.lBytearrayToSignedLongword(ba,offsetToWantedBytearray));
+		assertEquals(expected,ByteTools.littleEndianBytesToSignedLongWord(ba,offsetToWantedBytearray));
 	}
 
 	@Test
@@ -127,7 +127,7 @@ class ByteToolsTest {
 		long expected=0xff0280ffl;
 		byte[] ba=new byte[] {0x11,(byte)0xff,0x02,(byte)0x80,(byte)0xff,0x11,0x11};
 		int offsetToWantedBytearray=1;
-		assertEquals(expected,ByteTools.bBytearrayToLongword(ba,offsetToWantedBytearray));
+		assertEquals(expected,ByteTools.bigEndianBytesToLongWord(ba,offsetToWantedBytearray));
 	}
 
 	@Test
@@ -135,7 +135,7 @@ class ByteToolsTest {
 		long expected=-16909061l;
 		byte[] ba=new byte[] {0x11,(byte)0xfe,(byte)0xfd,(byte)0xfc,(byte)0xfb,0x11,0x11};
 		int offsetToWantedBytearray=1;
-		assertEquals(expected,ByteTools.bBytearrayToSignedLongword(ba,offsetToWantedBytearray));
+		assertEquals(expected,ByteTools.bigEndianBytesToSignedLongWord(ba,offsetToWantedBytearray));
 	}
 
 	@Test
@@ -143,7 +143,7 @@ class ByteToolsTest {
 		long expected=0xff0280ffl;
 		byte[] ba=new byte[] {0x11,(byte)0xff,(byte)0x80,0x02,(byte)0xff,0x11,0x11};
 		int offsetToWantedBytearray=1;
-		assertEquals(expected,ByteTools.lBytearrayToLongword(ba,offsetToWantedBytearray));
+		assertEquals(expected,ByteTools.littleEndianBytesToLongWord(ba,offsetToWantedBytearray));
 	}
 
 	@Test
@@ -151,7 +151,7 @@ class ByteToolsTest {
 		long expected=-16909061l;
 		byte[] ba=new byte[] {0x11,(byte)0xfb,(byte)0xfc,(byte)0xfd,(byte)0xfe,0x11,0x11};
 		int offsetToWantedBytearray=1;
-		assertEquals(expected,ByteTools.lBytearrayToSignedLongword(ba,offsetToWantedBytearray));
+		assertEquals(expected,ByteTools.littleEndianBytesToSignedLongWord(ba,offsetToWantedBytearray));
 	}
 
 
@@ -160,7 +160,7 @@ class ByteToolsTest {
 		int expected=0x0180;
 		byte[] ba=new byte[] {0x11,0x11,0x01,(byte)0x80,0x11,0x11};
 		int offsetToWantedBytearray=2;
-		assertEquals(expected,ByteTools.bBytearrayToWord(ba,offsetToWantedBytearray));
+		assertEquals(expected,ByteTools.bigEndianBytesToWord(ba,offsetToWantedBytearray));
 	}
 
 	@Test
@@ -168,7 +168,7 @@ class ByteToolsTest {
 		int expected=0x0180;
 		byte[] ba=new byte[] {0x11,0x11,0x01,(byte)0x80,0x11,0x11};
 		int offsetToWantedBytearray=2;
-		assertEquals(expected,ByteTools.bBytearrayToSignedWord(ba,offsetToWantedBytearray));
+		assertEquals(expected,ByteTools.bigEndianBytesToSignedWord(ba,offsetToWantedBytearray));
 	}
 
 	@Test
@@ -176,7 +176,7 @@ class ByteToolsTest {
 		int expected=0x0180;
 		byte[] ba=new byte[] {0x11,0x11,(byte)0x80,0x01,0x11,0x11};
 		int offsetToWantedBytearray=2;
-		assertEquals(expected,ByteTools.lBytearrayToWord(ba,offsetToWantedBytearray));
+		assertEquals(expected,ByteTools.littleEndianBytesToWord(ba,offsetToWantedBytearray));
 	}
 
 	@Test
@@ -184,7 +184,7 @@ class ByteToolsTest {
 		int expected=0x0180;
 		byte[] ba=new byte[] {0x11,0x11,(byte)0x80,0x01,0x11,0x11};
 		int offsetToWantedBytearray=2;
-		assertEquals(expected,ByteTools.lBytearrayToSignedWord(ba,offsetToWantedBytearray));
+		assertEquals(expected,ByteTools.littleEndianBytesToSignedWord(ba,offsetToWantedBytearray));
 	}
 
 	@Test
@@ -192,7 +192,7 @@ class ByteToolsTest {
 		int expected=0xff02;
 		byte[] ba=new byte[] {0x11,(byte)0xff,0x02,0x11,0x11};
 		int offsetToWantedBytearray=1;
-		assertEquals(expected,ByteTools.bBytearrayToWord(ba,offsetToWantedBytearray));
+		assertEquals(expected,ByteTools.bigEndianBytesToWord(ba,offsetToWantedBytearray));
 	}
 
 	@Test
@@ -200,7 +200,7 @@ class ByteToolsTest {
 		int expected=-2;
 		byte[] ba=new byte[] {0x11,(byte)0xff,(byte)0xfe,0x11,0x11};
 		int offsetToWantedBytearray=1;
-		assertEquals(expected,ByteTools.bBytearrayToSignedWord(ba,offsetToWantedBytearray));
+		assertEquals(expected,ByteTools.bigEndianBytesToSignedWord(ba,offsetToWantedBytearray));
 	}
 
 	@Test
@@ -208,7 +208,7 @@ class ByteToolsTest {
 		int expected=0xff02;
 		byte[] ba=new byte[] {0x11,0x02,(byte)0xff,0x11,0x11};
 		int offsetToWantedBytearray=1;
-		assertEquals(expected,ByteTools.lBytearrayToWord(ba,offsetToWantedBytearray));
+		assertEquals(expected,ByteTools.littleEndianBytesToWord(ba,offsetToWantedBytearray));
 	}
 
 	@Test
@@ -216,7 +216,7 @@ class ByteToolsTest {
 		int expected=-2;
 		byte[] ba=new byte[] {0x11,(byte)0xfe,(byte)0xff,0x11,0x11};
 		int offsetToWantedBytearray=1;
-		assertEquals(expected,ByteTools.lBytearrayToSignedWord(ba,offsetToWantedBytearray));
+		assertEquals(expected,ByteTools.littleEndianBytesToSignedWord(ba,offsetToWantedBytearray));
 	}
 
 
@@ -225,7 +225,7 @@ class ByteToolsTest {
 		int expected=0x14;
 		byte[] bytearray=new byte[]	{0x01,0x02,0x14,0x04,0x05};
 		int offsetToByte=2;
-		assertEquals(expected,ByteTools.bytearrayToByte(bytearray, offsetToByte));
+		assertEquals(expected,ByteTools.bytesToByte(bytearray, offsetToByte));
 	}
 
 	@Test
@@ -233,7 +233,7 @@ class ByteToolsTest {
 		int expected=0xff;
 		byte[] bytearray=new byte[] {0x01,0x02,(byte)0xff,0x04,0x05};
 		int offsetToByte=2;
-		assertEquals(expected,ByteTools.bytearrayToByte(bytearray, offsetToByte));
+		assertEquals(expected,ByteTools.bytesToByte(bytearray, offsetToByte));
 	}
 
 	@Test
@@ -242,7 +242,7 @@ class ByteToolsTest {
 		byte[] expected=new byte[]	{0x01,0x02,0x11,0x12,0x05,0x06,0x07,0x08};
 		int word=0x1112;
 		int offsetToWriteWord=2;
-		ByteTools.bWriteWordToBytearray(bytearray,offsetToWriteWord,word);
+		ByteTools.putWordAtPositionBigEndian(word,bytearray,offsetToWriteWord);
 		assertArrayEquals(expected,bytearray);
 	}
 
@@ -252,7 +252,7 @@ class ByteToolsTest {
 		byte[] expected=new byte[]	{0x01,0x02,0x12,0x11,0x05,0x06,0x07,0x08};
 		int word=0x1112;
 		int offsetToWriteWord=2;
-		ByteTools.lWriteWordToBytearray(bytearray,offsetToWriteWord,word);
+		ByteTools.putWordAtPositionLittleEndian(word,bytearray,offsetToWriteWord);
 		assertArrayEquals(expected,bytearray);
 	}
 
@@ -262,7 +262,7 @@ class ByteToolsTest {
 		byte[] expected=new byte[]	{0x01,0x02,(byte)0xff,(byte)0xfe,0x05,0x06,0x07,0x08};
 		int word=0xfffe;
 		int offsetToWriteWord=2;
-		ByteTools.bWriteWordToBytearray(bytearray,offsetToWriteWord,word);
+		ByteTools.putWordAtPositionBigEndian(word,bytearray,offsetToWriteWord);
 		assertArrayEquals(expected,bytearray);
 	}
 
@@ -272,7 +272,7 @@ class ByteToolsTest {
 		byte[] expected=new byte[]	{0x01,0x02,(byte)0xfe,(byte)0xff,0x05,0x06,0x07,0x08};
 		int word=0xfffe;
 		int offsetToWriteWord=2;
-		ByteTools.lWriteWordToBytearray(bytearray,offsetToWriteWord,word);
+		ByteTools.putWordAtPositionLittleEndian(word,bytearray,offsetToWriteWord);
 		assertArrayEquals(expected,bytearray);
 	}
 
@@ -282,7 +282,7 @@ class ByteToolsTest {
 		byte[] expected=new byte[]	{0x01,0x02,0x11,0x12,0x13,0x14,0x07,0x08};
 		int longword=0x11121314;
 		int offsetToWriteLongword=2;
-		ByteTools.bWriteLongwordToBytearray(bytearray,offsetToWriteLongword,longword);
+		ByteTools.putLongWordAtPositionBigEndian(longword,bytearray,offsetToWriteLongword);
 		assertArrayEquals(expected,bytearray);
 	}
 
@@ -292,7 +292,7 @@ class ByteToolsTest {
 		byte[] expected=new byte[]	{0x01,0x02,0x14,0x13,0x12,0x11,0x07,0x08};
 		int longword=0x11121314;
 		int offsetToWriteLongword=2;
-		ByteTools.lWriteLongwordToBytearray(bytearray,offsetToWriteLongword,longword);
+		ByteTools.putLongWordAtPositionLittleEndian(longword,bytearray,offsetToWriteLongword);
 		assertArrayEquals(expected,bytearray);
 	}
 
@@ -302,7 +302,7 @@ class ByteToolsTest {
 		byte[] expected=new byte[]	{0x01,0x02,(byte)0xff,(byte)0xfe,(byte)0xfd,(byte)0xfc,0x07,0x08};
 		int longword=0xfffefdfc;
 		int offsetToWriteLongword=2;
-		ByteTools.bWriteLongwordToBytearray(bytearray,offsetToWriteLongword,longword);
+		ByteTools.putLongWordAtPositionBigEndian(longword,bytearray,offsetToWriteLongword);
 		assertArrayEquals(expected,bytearray);
 	}
 
@@ -312,20 +312,20 @@ class ByteToolsTest {
 		byte[] expected=new byte[]	{0x01,0x02,(byte)0xfc,(byte)0xfd,(byte)0xfe,(byte)0xff,0x07,0x08};
 		int longword=0xfffefdfc;
 		int offsetToWriteLongword=2;
-		ByteTools.lWriteLongwordToBytearray(bytearray,offsetToWriteLongword,longword);
+		ByteTools.putLongWordAtPositionLittleEndian(longword,bytearray,offsetToWriteLongword);
 		assertArrayEquals(expected,bytearray);
 	}
 
 	@Test
 	void positiveHexStringIsConvertedToBigEndianBytearrayCorrectly() {
 		byte[] expected=new byte[] {0x01,0x02,0x03,0x04};
-		assertArrayEquals(expected,ByteTools.bHexStringToByteArray("01020304"));
+		assertArrayEquals(expected,ByteTools.hexStringToByteArrayBigEndian("01020304"));
 	}
 
 	@Test
 	void negativeHexStringIsConvertedToBigEndianBytearrayCorrectly() {
 		byte[] expected=new byte[] {(byte)0xff,(byte)0xfe,(byte)0xfd,(byte)0xfc};
-		assertArrayEquals(expected,ByteTools.bHexStringToByteArray("fffefdfc"));
+		assertArrayEquals(expected,ByteTools.hexStringToByteArrayBigEndian("fffefdfc"));
 	}
 
 	@Test
@@ -333,7 +333,7 @@ class ByteToolsTest {
 		byte[] bytearray1=new byte[] {0x01,0x02,0x03,0x04};
 		byte[] bytearray2=new byte[] {0x00,0x00,0x01,0x02,0x03,0x04,0x00,0x00};
 		int offset=2;
-		assertTrue(ByteTools.compareBytes(bytearray1, bytearray2, offset));
+		assertTrue(ByteTools.equalsAtPosition(bytearray1, bytearray2, offset));
 	}
 
 	@Test
@@ -341,7 +341,7 @@ class ByteToolsTest {
 		byte[] bytearray1=new byte[] {0x01,0x02,0x03,0x04};
 		byte[] bytearray2=new byte[] {0x00,0x00,0x01,0x00,0x03,0x04,0x00,0x00};
 		int offset=2;
-		assertFalse(ByteTools.compareBytes(bytearray1, bytearray2, offset));
+		assertFalse(ByteTools.equalsAtPosition(bytearray1, bytearray2, offset));
 	}
 
 }

@@ -49,7 +49,7 @@ public class Settings {
 	public Settings(String programName,String version){
 		this.programName=programName;
 		this.version=version;
-		this.javaproperty_programSettingsFolder=programName.toLowerCase()+".settings.folder";
+		this.javaproperty_programSettingsFolder=programName.toLowerCase().replaceAll(" ","_")+".settings.folder";
 		logger.debug("javaproperty settings folder: "+this.javaproperty_programSettingsFolder);
 		File folder=determinePropertiesFolder();
 		if(folder!=null) {

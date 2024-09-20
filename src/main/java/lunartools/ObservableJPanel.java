@@ -5,13 +5,6 @@ import java.util.Observer;
 
 import javax.swing.JPanel;
 
-/**
- * To use the observer pattern together with a JPanel.
- * <br>It´s not possible to extend both JPanel and Observable, because you can´t extend two classes in Java.
- * <br>Extend this class instead of JPanel, it contains an Observable object and offers its methods.
- * 
- * @author Thomas Mattel
- */
 public class ObservableJPanel extends JPanel{
 
 	private class InternalObservable extends Observable{

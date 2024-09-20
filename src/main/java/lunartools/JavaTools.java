@@ -22,5 +22,5 @@ public class JavaTools {
 		} catch (OutOfMemoryError e) {}
 		return null;
 	}
-	
+
 }
