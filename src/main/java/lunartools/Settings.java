@@ -33,8 +33,6 @@ import org.slf4j.LoggerFactory;
  * <li>Rectangle
  * <li>Point
  * <li>Dimension
- * 
- * @author Thomas Mattel
  */
 public class Settings {
 	private static Logger logger = LoggerFactory.getLogger(Settings.class);
@@ -629,4 +627,16 @@ public class Settings {
 		}
 	}
 
+	/**
+	 * Returns the property file´s folder.<br>
+	 * 
+	 * @return The folder containing the application properties
+	 */
+	public File getPropertiesFolder() {
+		if(fileProperties==null) {
+			return null;
+		}
+		return fileProperties.getParentFile();
+	}
+	
 }
