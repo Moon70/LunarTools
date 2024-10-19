@@ -19,14 +19,14 @@ public class ProgressDialog extends JDialog implements ActionListener,PropertyCh
 	public static final String PROPERTY_BAR1="bar1";
 	static final String ACTIONCOMMAND_CANCEL="cancel";
 	private ProgressPanel progressPanel;
-	private SwingWorker<Void, Void> swingWorker;
+	private SwingWorker<?, ?> swingWorker;
 	private static volatile boolean canceled;
 
-	public static boolean executeWithProgresssDialog(JFrame frame, String dialogTitle, String infoLine1, SwingWorker<Void, Void> swingWorker) {
+	public static boolean executeWithProgresssDialog(JFrame frame, String dialogTitle, String infoLine1, SwingWorker<?, ?> swingWorker) {
 		return executeWithProgresssDialog(frame, dialogTitle, infoLine1, null, swingWorker);
 	}
 
-	public static boolean executeWithProgresssDialog(JFrame frame, String dialogTitle, String infoLine1, String infoLine2, SwingWorker<Void, Void> swingWorker) {
+	public static boolean executeWithProgresssDialog(JFrame frame, String dialogTitle, String infoLine1, String infoLine2, SwingWorker<?, ?> swingWorker) {
 		ProgressDialog progressDialog = new ProgressDialog(frame , dialogTitle, infoLine1,infoLine2);
 		progressDialog.swingWorker=swingWorker;
 		swingWorker.addPropertyChangeListener(progressDialog);
