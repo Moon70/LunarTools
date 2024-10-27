@@ -49,13 +49,14 @@ public class ImageTools {
 	 * @throws IOException
 	 */
 	public static Image createImageFromResource(String resourcePath) throws IOException {
-		InputStream inputStream = ImageTools.class.getResourceAsStream(resourcePath);
-		if(inputStream==null) {
-			return null;
+		try (InputStream inputStream = ImageTools.class.getResourceAsStream(resourcePath)){
+			if(inputStream==null) {
+				return null;
+			}
+			byte[] imagedata=FileTools.readInputStreamToByteArray(inputStream);
+			Image image=Toolkit.getDefaultToolkit().createImage(imagedata);
+			return image;
 		}
-		byte[] imagedata=FileTools.readBytearrayFromInputStream(inputStream);
-		Image image=Toolkit.getDefaultToolkit().createImage(imagedata);
-		return image;
 	}
 	
 	private static BufferedImage createBufferedImage_intRGB(BufferedImage bufferedImage) {
@@ -65,6 +66,22 @@ public class ImageTools {
 		BufferedImage bufferedImageInt=new BufferedImage(bufferedImage.getWidth(),bufferedImage.getHeight(),BufferedImage.TYPE_INT_RGB);
 		bufferedImageInt.getGraphics().drawImage(bufferedImage,0,0,null);
 		return bufferedImageInt;
+	}
+
+	/**
+	 * Converts the BufferedImage to the desired type, or returns the given BufferedImage if it is already of the desired type.
+	 * 
+	 * @param bufferedImage The BufferedImage to convert
+	 * @param type The desired type, i.e. <code>BufferedImage.TYPE_INT_RGB</code>
+	 * @return
+	 */
+	public static BufferedImage convertBufferedImageToType(BufferedImage bufferedImage,int type) {
+		if(bufferedImage.getType()==type) {
+			return bufferedImage;
+		}
+		BufferedImage bufferedImageConverted=new BufferedImage(bufferedImage.getWidth(),bufferedImage.getHeight(),type);
+		bufferedImageConverted.getGraphics().drawImage(bufferedImage,0,0,null);
+		return bufferedImageConverted;
 	}
 
 	/**
