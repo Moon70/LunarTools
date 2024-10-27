@@ -152,12 +152,8 @@ public class FileTools{
 		ByteArrayOutputStream baos=new ByteArrayOutputStream();
 		final byte[] buffer=new byte[1024];
 		int len=0;
-		try {
-			while((len=inputStream.read(buffer))>0) {
-				baos.write(buffer, 0, len);
-			}
-		} finally {
-			inputStream.close();
+		while((len=inputStream.read(buffer))>0) {
+			baos.write(buffer, 0, len);
 		}
 		return baos.toByteArray();
 	}
