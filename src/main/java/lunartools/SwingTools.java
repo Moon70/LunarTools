@@ -50,10 +50,21 @@ public class SwingTools {
 	 * @return The program version, which is the <code>version</code> tag of the pom.xml.
 	 */
 	public static String determineProgramVersion() {
+		return determineProgramVersion("/project.properties");
+	}
+	
+	/**
+	 * Determines the program version, which is the <code>version</code> tag of the pom.xml, assuming
+	 * that the calling application contains a <code>.properties</code> file with the given
+	 * resource path and an appropriate resource filter in the pom.xml
+	 * 
+	 * @return The program version, which is the <code>version</code> tag of the pom.xml.
+	 */
+	public static String determineProgramVersion(String projectPropertiesResourcePath) {
 		String versionProgram="";
-		try(InputStream inputStream=SwingTools.class.getResourceAsStream("/project.properties")){
+		try(InputStream inputStream=SwingTools.class.getResourceAsStream(projectPropertiesResourcePath)){
 			if(inputStream==null) {
-				logger.error("project.properties not found");
+				logger.error("{} not found",projectPropertiesResourcePath);
 				return "";
 			}
 			Properties properties = new Properties();
@@ -63,7 +74,7 @@ public class SwingTools {
 				versionProgram="";
 			}
 		} catch (IOException e) {
-			logger.error("error loading project.properties",e);
+			logger.error("error loading {}",projectPropertiesResourcePath,e);
 		}
 		return versionProgram;
 	}
