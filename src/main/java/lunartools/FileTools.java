@@ -63,7 +63,7 @@ public class FileTools{
 	}
 
 	/**
-	 * Read file into a stringbuffer.
+	 * Read file into a StringBuffer.
 	 * 
 	 * @param file The file to read
 	 * @param charset Name of the file´s charset
@@ -73,6 +73,20 @@ public class FileTools{
 	public static StringBuffer readFileToStringBuffer(File file,String charset) throws IOException{
 		try(InputStream inputStream=new FileInputStream(file)){
 			return readInputStreamToStringBuffer(inputStream,charset);
+		}
+	}
+
+	/**
+	 * Read file into a StringBuilder.
+	 * 
+	 * @param file The file to read
+	 * @param charset Name of the file´s charset
+	 * @return Content of file as <code>StringBuilder</code>
+	 * @throws IOException
+	 */
+	public static StringBuilder readFileToStringBuilder(File file,String charset) throws IOException{
+		try(InputStream inputStream=new FileInputStream(file)){
+			return readInputStreamToStringBuilder(inputStream,charset);
 		}
 	}
 
@@ -99,11 +113,11 @@ public class FileTools{
 	}
 
 	/**
-	 * Reads the inputstream and puts the data into a stringbuffer.
+	 * Reads the inputstream and puts the data into a StringBuffer.
 	 * 
 	 * @param inputStream The inputstream to read
 	 * @param charset Name of the inputstream´s charset
-	 * @return StringBuffer Data of inputstream as stringbuffer
+	 * @return StringBuffer Data of inputstream as <code>StringBuffer</code>
 	 * @throws IOException
 	 */
 	public static StringBuffer readInputStreamToStringBuffer(InputStream inputStream,String charset) throws IOException{
@@ -116,6 +130,26 @@ public class FileTools{
 			}
 		}
 		return stringBuffer;
+	}
+
+	/**
+	 * Reads the inputstream and puts the data into a StringBuilder.
+	 * 
+	 * @param inputStream The inputstream to read
+	 * @param charset Name of the inputstream´s charset
+	 * @return StringBuilder Data of inputstream as <code>StringBuilder</code>
+	 * @throws IOException
+	 */
+	public static StringBuilder readInputStreamToStringBuilder(InputStream inputStream,String charset) throws IOException{
+		final char[] buffer=new char[1024];
+		StringBuilder stringBuilder=new StringBuilder();
+		try(BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(inputStream,charset))) {
+			int len;
+			while((len=bufferedReader.read(buffer))!=-1){
+				stringBuilder.append(buffer,0,len);
+			}
+		}
+		return stringBuilder;
 	}
 
 	/**
@@ -261,7 +295,7 @@ public class FileTools{
 	}
 
 	/**
-	 * Write (create/overwrite or append) stringbuffer to file.
+	 * Write (create/overwrite or append) StringBuffer to file.
 	 * 
 	 * @param file The <code>File</code> to create/overwrite or append to
 	 * @param stringBuffer The <code>StringBuffer</code> to write
@@ -271,6 +305,20 @@ public class FileTools{
 	 */
 	public static void writeStringBufferToFile(File file,StringBuffer stringBuffer,boolean append,String charset) throws IOException{
 		byte[] bytes=stringBuffer.toString().getBytes(charset);
+		writeByteArrayToFile(file,bytes,append);
+	}
+
+	/**
+	 * Write (create/overwrite or append) StringBuilder to file.
+	 * 
+	 * @param file The <code>File</code> to create/overwrite or append to
+	 * @param stringBuilder The <code>StringBuilder</code> to write
+	 * @param append <code>false</code> to create/overwrite a file, <true> to append to existing file
+	 * @param charset Name of the charset for creating the textfile
+	 * @throws IOException
+	 */
+	public static void writeStringBuilderToFile(File file,StringBuilder stringBuilder,boolean append,String charset) throws IOException{
+		byte[] bytes=stringBuilder.toString().getBytes(charset);
 		writeByteArrayToFile(file,bytes,append);
 	}
 

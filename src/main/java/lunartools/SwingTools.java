@@ -95,8 +95,8 @@ public class SwingTools {
 	}
 
 	public static Rectangle fixScreenBounds(Rectangle viewBounds, Dimension defaultFrameSize) {
-		int centerX=viewBounds.x+viewBounds.width>>1;
-		int centerY=viewBounds.y+viewBounds.height>>1;
+		int centerX=viewBounds.x+(viewBounds.width>>1);
+		int centerY=viewBounds.y+(viewBounds.height>>1);
 		GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();  
 		GraphicsDevice[] graphicsDevices = graphicsEnvironment.getScreenDevices();
 		int numberOfGraphicsDevices=graphicsDevices.length;
