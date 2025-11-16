@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class SettingsTest {
-	private Settings settings;
+	private AbstractSettings settings;
 	private final String programName="UNIT_test_settings";
 	private final String programVersion="0.0.1";
 
@@ -23,7 +23,7 @@ class SettingsTest {
 		URL url=SettingsTest.class.getResource("/"+programName+".properties");
 		File file=new File(url.getFile());
 		System.setProperty(javaproperty_programSettingsFolder, file.getParent());
-		settings=new Settings(programName,programVersion);
+		settings=new AbstractSettings(programName,programVersion) {};
 	}
 
 	@Test

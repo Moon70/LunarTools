@@ -33,11 +33,9 @@ import org.slf4j.LoggerFactory;
  * <li>Rectangle
  * <li>Point
  * <li>Dimension
- * @deprecated Subclass AbstractSettings
  */
-@Deprecated
-public class Settings {
-	private static Logger logger = LoggerFactory.getLogger(Settings.class);
+public abstract class AbstractSettings {
+	private static Logger logger = LoggerFactory.getLogger(AbstractSettings.class);
 	private static final String DEFAULTPROPERTIES_FILENAME="DefaultSettings.properties";
 	private String programName;
 	private String version;
@@ -46,7 +44,7 @@ public class Settings {
 	private Properties propertiesDefault;
 	private File fileProperties;
 
-	public Settings(String programName,String version){
+	public AbstractSettings(String programName,String version){
 		this.programName=programName;
 		this.version=version;
 		this.javaproperty_programSettingsFolder=programName.toLowerCase().replaceAll(" ","_")+".settings.folder";
@@ -69,7 +67,7 @@ public class Settings {
 			}
 		}
 
-		path = Settings.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		path = AbstractSettings.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		try {
 			if(path.toLowerCase().endsWith(".jar")) {
 				file=new File(URLDecoder.decode(path, "UTF-8")).getParentFile();
