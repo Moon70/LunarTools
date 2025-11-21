@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractSettings {
 	private static Logger logger = LoggerFactory.getLogger(AbstractSettings.class);
 	private static final String DEFAULTPROPERTIES_FILENAME="DefaultSettings.properties";
+	private static final String PROPERTY_SETTINGSOWNER="SettingsOwner";
 	private String programName;
 	private String version;
 	private String javaproperty_programSettingsFolder;
@@ -53,8 +54,25 @@ public abstract class AbstractSettings {
 		if(folder!=null) {
 			this.fileProperties=new File(folder,programName+".properties");
 			logger.debug("program settings file: "+this.fileProperties);
+			loadSettings();
+			String settingsOwner=System.getProperty("user.name","unknown").replaceAll(" ", "_");
+			if(!containsKey(PROPERTY_SETTINGSOWNER)) {
+				setString(PROPERTY_SETTINGSOWNER, settingsOwner);
+				try {
+					saveSettings();
+				} catch (IOException e) {
+					logger.error("Error saving settings file",e);
+				}
+				return;
+			}
+			if(getString(PROPERTY_SETTINGSOWNER).equalsIgnoreCase(settingsOwner)) {
+				return;
+			}
+			this.fileProperties=new File(folder,programName+"_"+settingsOwner+".properties");
+			logger.debug("program settings file changed to: "+this.fileProperties);
+			loadSettings();
+			setString(PROPERTY_SETTINGSOWNER, settingsOwner);
 		}
-		loadSettings();
 	}
 
 	private File determinePropertiesFolder() {
@@ -93,9 +111,8 @@ public abstract class AbstractSettings {
 
 	private void loadSettings(){
 		properties=new Properties(loadDefaultProperties());
-		File file=fileProperties;
-		if(file.exists()) {
-			try(FileReader fileReader=new FileReader(file)) {
+		if(fileProperties!=null && fileProperties.exists()) {
+			try(FileReader fileReader=new FileReader(fileProperties)) {
 				properties.load(fileReader);
 			} catch (IOException e) {
 				throw new RuntimeException("error loading settings",e);
@@ -199,6 +216,50 @@ public abstract class AbstractSettings {
 	 */
 	public void setString(String name, String string) {
 		properties.setProperty(name,string);
+	}
+
+	/**
+	 * This method searches both the property file and default property file for the given key and returns its
+	 * <code>boolean</code> value by calling <code>Boolean.parseBoolean</code>.
+	 * <br>If no property is found, a RuntimeException is thrown.
+	 * 
+	 * @param name Property name
+	 * @throws RuntimeException Property not found
+	 * @return property value as <code>boolean</code>
+	 */
+	public boolean getBoolean(String name) {
+		String s=properties.getProperty(name);
+		if(s==null) {
+			throw new RuntimeException("Property not found: "+name);
+		}
+		return Boolean.parseBoolean(s);
+	}
+
+	/**
+	 * This method searches both the property file and default property file for the given key and returns its
+	 * <code>boolean</code> value by calling <code>Boolean.parseBoolean</code>.
+	 * <br>If no property is found, the given default value is returned.
+	 * 
+	 * @param name Property name
+	 * @param defaultInt Default property value
+	 * @return property value
+	 */
+	public boolean getBoolean(String name, boolean defaultBoolean) {
+		String s=properties.getProperty(name);
+		if(s!=null) {
+			return Boolean.parseBoolean(s);
+		}
+		return defaultBoolean;
+	}
+
+	/**
+	 * Stores the given property.
+	 * 
+	 * @param name Property name
+	 * @param string property value
+	 */
+	public void setBoolean(String name, boolean value) {
+		properties.setProperty(name,Boolean.toString(value));
 	}
 
 	/**
