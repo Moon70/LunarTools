@@ -36,6 +36,7 @@ class ImageToolsTest {
 		assertNull(imageIcon);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	void imageIsCreatedFromResourceCorrectly() throws Exception {
 		Image image=ImageTools.createImageFromResource("/RGB.png");
@@ -51,6 +52,7 @@ class ImageToolsTest {
 		assertEquals(8,image.getWidth(null));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
 	void creatingImageFromNotExistingResourceReturnsNull() throws IOException {
 		Image image=ImageTools.createImageFromResource("/FileDoesNotExist.png");

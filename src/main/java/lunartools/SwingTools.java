@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.imageio.ImageIO;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +36,7 @@ public class SwingTools {
 		List<Image> icons=new ArrayList<Image>();
 		for(String pathIcon:PROGRAM_ICON_PATHS) {
 			try {
-				icons.add(ImageTools.createImageFromResource(pathIcon));
+				icons.add(ImageIO.read(SwingTools.class.getResource(pathIcon)));
 			} catch (IOException e) {
 				logger.warn("error loading program icon: "+pathIcon,e);
 			}

@@ -47,7 +47,9 @@ public class ImageTools {
 	 * @param context
 	 * @return Image
 	 * @throws IOException
+	 * @Deprecated Use ImageIO.read(TheClass.class.getResource(resourcepath))
 	 */
+	@Deprecated
 	public static Image createImageFromResource(String resourcePath) throws IOException {
 		try (InputStream inputStream = ImageTools.class.getResourceAsStream(resourcePath)){
 			if(inputStream==null) {
